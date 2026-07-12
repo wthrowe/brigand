@@ -1,9 +1,6 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.30)
 
-project(brigand)
-# When moving to CMake 3.0 and newer the set(brigand_VERSION 1.3.0) should
-# be replaced with project(brigand VERSION 1.3.0)
-set(brigand_VERSION 1.3.0)
+project(brigand VERSION 1.3.0)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
@@ -16,7 +13,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fcxx-exceptions")
 endif()
 
-include(FindPythonInterp)
+include(FindPython)
 find_package(Boost)
 
 if(Boost_FOUND)
