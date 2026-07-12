@@ -128,3 +128,29 @@ static_assert(std::is_same<brigand::insert<big_map, pair_ten>, big_map>::value, 
 
 // Test inserting a duplicate key with a different value
 static_assert(std::is_same<brigand::insert<big_map, brigand::pair<type_one, double>>, big_map>::value, "insertion failed");
+
+// Test maps containing a type that cannot be fully instantiated without errors
+struct map_test_placeholder {};
+template <typename T>
+struct map_test_func {
+  using type = typename T::type;
+};
+using map_test_bad_type = map_test_func<map_test_placeholder>;
+using map_test_bad_pair = brigand::pair<double, map_test_bad_type>;
+using map_test_uninstantiatable = brigand::map<map_test_bad_pair, brigand::pair<int, int>>;
+
+static_assert(std::is_same<brigand::lookup<map_test_uninstantiatable, double>, map_test_bad_type>::value, "lookup failed");
+static_assert(std::is_same<brigand::lookup<map_test_uninstantiatable, int>, int>::value, "lookup failed");
+
+static_assert(std::is_same<brigand::has_key<map_test_uninstantiatable, double>, brigand::true_type>::value, "has_key failed");
+static_assert(std::is_same<brigand::has_key<map_test_uninstantiatable, int>, brigand::true_type>::value, "has_key failed");
+static_assert(std::is_same<brigand::has_key<map_test_uninstantiatable, float>, brigand::false_type>::value, "has_key failed");
+
+static_assert(std::is_same<brigand::erase<map_test_uninstantiatable, double>, brigand::map<brigand::pair<int, int>>>::value, "erase failed");
+static_assert(std::is_same<brigand::erase<map_test_uninstantiatable, int>, brigand::map<map_test_bad_pair>>::value, "erase failed");
+
+static_assert(std::is_same<brigand::at<map_test_uninstantiatable, double>, map_test_bad_type>::value, "at failed");
+static_assert(std::is_same<brigand::at<map_test_uninstantiatable, int>, int>::value, "at failed");
+
+static_assert(std::is_same<brigand::insert<brigand::map<>, map_test_bad_pair>, brigand::map<map_test_bad_pair>>::value, "insertion failed");
+static_assert(std::is_same<brigand::insert<brigand::map<map_test_bad_pair>, brigand::pair<int, int>>, map_test_uninstantiatable>::value, "insertion failed");
