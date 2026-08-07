@@ -47,7 +47,7 @@ namespace detail
         {
         };
         template <typename C, typename P>
-        static auto test(P * p) -> decltype(C::at(*p), brigand::true_type());
+        static auto test(P * p) -> decltype((void)C::at(*p), brigand::true_type());
 
         template <typename, typename>
         static brigand::false_type test(...);

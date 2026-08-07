@@ -33,7 +33,7 @@ namespace detail
         };
 
         template <typename C, typename P>
-        static auto test(P * p) -> decltype(C::erase(type_<P>{}), brigand::true_type());
+        static auto test(P * p) -> decltype((void)C::erase(type_<P>{}), brigand::true_type());
 
         template <typename, typename>
         static brigand::false_type test(...);
